@@ -1,0 +1,24 @@
+ 
+  <%= f.label :name, Spree.t(:store) %> <span class="required">*</span><br />
+   <p style="width:100px;">
+  <%= collection_select :taxonomy, :store_id, Spree::Store.all, :id, :name  %>
+  </p>
+  
+   <%= f.label :stores, Spree.t(:stores)%><br />
+  <% Spree::Store.all.each do |store| %>
+    <%= check_box_tag "product[store_ids][]", store.id, @product.stores.include?(store) %> <%= store.name %>
+  <% end %>
+
+<div class="twelve columns alpha omega" data-hook="admin_product_taxons">
+  
+  
+    <%= f.field_container :taxons do %>
+      <%= f.label :taxon_ids, Spree.t(:taxons) %><br />
+      <%= f.hidden_field :taxon_ids, :value => @product.taxon_ids.join(',') %>
+    <% end %>
+
+    <%= f.field_container :option_types do %>
+      <%= f.label :option_type_ids, Spree.t(:option_types) %>
+      <%= f.hidden_field :option_type_ids, :value => @product.option_type_ids.join(',') %>
+    <% end %>
+  </div>
