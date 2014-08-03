@@ -9,6 +9,7 @@ module Spree
 
     has_many :store_shipping_methods
     has_many :shipping_methods, :through => :store_shipping_methods
+    has_many :perferences
 
     has_and_belongs_to_many :promotion_rules, :class_name => 'Spree::Promotion::Rules::Store', :join_table => 'spree_promotion_rules_stores', :association_foreign_key => 'promotion_rule_id'
 
