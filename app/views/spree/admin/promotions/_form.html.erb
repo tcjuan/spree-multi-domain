@@ -3,13 +3,10 @@
   <div id="general_fields" class="alpha thirteen columns">
     <div class="alpha four columns">
     	
-    	<input type='hidden' name='store_id' class='store_picker fullwidth' value='<%= current_store.id %>'>
-    	sadfsafdsaf
     	
-    	
-      <%= f.field_container :store_id ,:type => 'hidden' do %>
+      <%= f.field_container :store_id  do %>
         <%= f.label :store_id %>
-        <%= f.text_field :store_id, :class => 'fullwidth' %>
+        <%= f.text_field :store_id, {:type => 'hidden',:class => 'fullwidth' ,:value=> current_store.id } %>
       <% end %>
     	
       <%= f.field_container :name do %>
