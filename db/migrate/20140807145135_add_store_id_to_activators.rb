@@ -2,7 +2,7 @@ class AddStoreIdToActivators < ActiveRecord::Migration
   def self.up
    
    change_table :spree_activators do |t|
-      t.string :store_id
+      t.integer :store_id
     end
   end
 
