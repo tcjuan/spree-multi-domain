@@ -19,9 +19,9 @@ $(document).ready(function () {
         datatype: 'json',
         data: function (term, page) {
         	 qq= [];
-        	 $("input[name='product[store_ids][]']:checked").each(function() {
+        	 $("input[name='qq[taxonomy_ids][]']:checked").each(function() {
     qq.push($(this).val());
-    alert($(this).val());
+  //  alert($(this).val());
     });
           return {
             per_page: 50,
