@@ -4,31 +4,31 @@ $.fn.storeAutocomplete = function() {
     multiple: true,
     initSelection: function(element, callback) {
       $.get(Spree.routes.store_search, { ids: element.val() }, function(data) {
-        callback(data)
-      })
+        callback(data);
+      });
     },
     ajax: {
       url: Spree.routes.store_search,
       datatype: 'json',
       data: function(term, page) {
-        return { q: term }
+        return { q: term };
       },
       results: function(data, page) {
-        return { results: data }
+        return { results: data };
       }
     },
     formatResult: function(store) {
-      return store.store.name;
+      return store.name;
     },
     formatSelection: function(store) {
-      return store.store.name;
+      return store.name;
     },
     id: function(store) {
-      return store.store.id
+      return store.id;
     }
   });
-}
+};
 
 $(document).ready(function () {
   $('.store_picker').storeAutocomplete();
-})
+});
