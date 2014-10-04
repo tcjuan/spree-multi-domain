@@ -7,6 +7,10 @@
 </div>
 
 <p>
-  <%= f.label :name, Spree.t(:store) %> <span class="required">*</span><br />
-  <%= collection_select :taxonomy, :store_id, Spree::Store.all, :id, :name  %>
+	<% if try_spree_current_user.email == 'admin@muchtel.com' %>   
+  		<%= f.label :name, Spree.t(:store) %> <span class="required">*</span><br />
+  		<%= collection_select :taxonomy, :store_id, Spree::Store.all, :id, :name  %>
+	<%else%>
+  		<%= f.hidden_field :store_id  , :value => current_store.id%>
+	<%end%>
 </p>
