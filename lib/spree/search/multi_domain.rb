@@ -60,7 +60,7 @@ module Spree::Search
         filter_queries << taxon.self_and_descendants.map{|t| "taxon_ids:(#{t.id})"}.join(" OR ")
       end
       
-      filter_queries << "store_t: #{store_id}" #if @properties[:current_store_id]
+      filter_queries << "store_t:#{store_id}" #if @properties[:current_store_id]
      # filter_queries << "store_t:4"
 
       facets = {
