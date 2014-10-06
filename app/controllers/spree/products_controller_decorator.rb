@@ -2,6 +2,10 @@ Spree::ProductsController.class_eval do
   before_filter :can_show_product, :only => :show
 
 
+    def index
+      @searcher = build_searcher(params)
+      @products = @searcher.retrieve_products(params[:store_id])
+    end
 
 
   private

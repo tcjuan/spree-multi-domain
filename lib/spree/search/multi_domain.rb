@@ -1,8 +1,8 @@
 module Spree::Search
   class MultiDomain < Spree::Core::Search::Base
-    def get_base_scope
+    def get_base_scope(store_id)
       base_scope = @cached_product_group ? @cached_product_group.products.active : Spree::Product.active
-   #  base_scope = base_scope.by_store(current_store_id) if current_store_id
+      base_scope = base_scope.by_store(store_id) #if current_store.id
       base_scope = base_scope.in_taxon(taxon) unless taxon.blank?
       
       
@@ -10,27 +10,27 @@ module Spree::Search
 
       base_scope = add_search_scopes(base_scope)
       base_scope
-    end
+    end   
     
     def prepare(params)
       super
-      @properties[:current_store_id] = params[:store_id]
+      @properties[:current_store_id] =  params[:current_store_id]
     end
     
-    def retrieve_products
-      if keywords.present?
-        find_products_by_solr(keywords)
+    def retrieve_products(store_id=nil)
+     if keywords.present?
+        find_products_by_solr(keywords , store_id)
       else
-        @products_scope = get_base_scope
+        @products_scope = get_base_scope(store_id)
         @products_scope.includes([:master]).page(page).per(per_page)
       end
     end
 
-    def products
+    def products(store_id)
       if keywords.present?
-        find_products_by_solr(keywords)
+        find_products_by_solr(keywords , store_id)
       else
-        @products_scope = get_base_scope
+        @products_scope = get_base_scope(store_id)
         @products_scope.includes([:master]).page(page).per(per_page)
       end
     end
@@ -40,7 +40,7 @@ module Spree::Search
     # NOTE: This class seems to loaded and init'd on rails startup
     # this means that any changes to the code will not take effect until the rails app is reloaded.
 
-    def find_products_by_solr(query)
+    def find_products_by_solr(query , store_id)
 
       # the order option does not work... it generates the solr query request correctly
       # but the returned result.records are not ordered correctly
@@ -60,7 +60,8 @@ module Spree::Search
         filter_queries << taxon.self_and_descendants.map{|t| "taxon_ids:(#{t.id})"}.join(" OR ")
       end
       
-      filter_queries << "store_ids:(#{@properties[:current_store_id]})" if @properties[:current_store_id]
+      filter_queries << "store_t: #{store_id}" #if @properties[:current_store_id]
+     # filter_queries << "store_t:4"
 
       facets = {
           :fields => PRODUCT_SOLR_FACETS,
@@ -70,17 +71,22 @@ module Spree::Search
 
       # adding :scores => true here should return relevance scoring, but the underlying acts_as_solr library seems broken
       search_options = {
-        :facets => facets,
+     #   :facets => facets,
         :limit => 25000,
-        :lazy => true,
-        :filter_queries => filter_queries,
+     #   :lazy => true,
+       :filter_queries =>filter_queries,
         :page => page, 
-        :per_page => per_page
+     #   :per_page => per_page
       }
 
       result = Spree::Product.find_by_solr(query || '', search_options)
+      
 
-      @count = result.total
+   #   @count = result.total
+      @count = result.docs.count
+      
+      Rails.logger.info "Totoal count:             #{result.count}   "
+      
       @properties[:total_entries] = @count
       products = Kaminari.paginate_array(result.records, :total_count => @count).page(page).per(per_page)
       @properties[:products] = products
@@ -94,7 +100,7 @@ module Spree::Search
       rescue
       end
 
-      @properties[:available_facets] = parse_facets_hash(result.facets)
+   #   @properties[:available_facets] = parse_facets_hash(result.facets)
       Spree::Product.where("spree_products.id" => products.map(&:id))
     end
 
