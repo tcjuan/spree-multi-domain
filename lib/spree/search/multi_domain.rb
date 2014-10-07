@@ -41,7 +41,7 @@ module Spree::Search
     # this means that any changes to the code will not take effect until the rails app is reloaded.
 
     def find_products_by_solr(query , store_id)
-
+       
       # the order option does not work... it generates the solr query request correctly
       # but the returned result.records are not ordered correctly
       # search_options.merge!(:sort => (order_by_price == 'descend') ? "price desc" : "price asc")
@@ -59,8 +59,10 @@ module Spree::Search
       if taxon 
         filter_queries << taxon.self_and_descendants.map{|t| "taxon_ids:(#{t.id})"}.join(" OR ")
       end
-      
       filter_queries << "store_t:#{store_id}" #if @properties[:current_store_id]
+      filter_queries << "available_on_t:{* TO NOW}"
+      filter_queries << "available_off_t:{* TO NOW}"
+        
      # filter_queries << "store_t:4"
 
       facets = {
@@ -76,7 +78,7 @@ module Spree::Search
      #   :lazy => true,
        :filter_queries =>filter_queries,
         :page => page, 
-     #   :per_page => per_page
+        :per_page => per_page
       }
 
       result = Spree::Product.find_by_solr(query || '', search_options)
