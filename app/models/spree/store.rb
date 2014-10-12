@@ -18,7 +18,7 @@ module Spree
     before_create :ensure_default_exists_and_is_unique
 
     scope :default, lambda { where(:default => true) }
-    scope :by_domain, lambda { |domain| where("domains like ?", "%#{domain}%") }
+    scope :by_domain, lambda { |domain| where("domains = ?", "#{domain}") }
 
     has_attached_file :logo,
       :styles => { :mini => '48x48>', :small => '100x100>', :medium => '250x250>' },
@@ -31,7 +31,7 @@ module Spree
     supports_s3 :logo
 
     def self.current(domain = nil)
-      current_store = domain ? Store.by_domain(domain).first : nil
+      current_store = domain ? Spree::Store.by_domain(domain).first : nil
       current_store || first_found_default
     end
 

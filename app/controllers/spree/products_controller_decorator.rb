@@ -4,7 +4,7 @@ Spree::ProductsController.class_eval do
 
     def index
       @searcher = build_searcher(params)
-      @products = @searcher.retrieve_products(params[:store_id])
+      @products = @searcher.retrieve_products(current_store.id)
     end
 
 

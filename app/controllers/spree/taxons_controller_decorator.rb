@@ -10,8 +10,9 @@ Spree::TaxonsController.class_eval do
       return unless @taxon
 
       @searcher = build_searcher(params.merge(:taxon => @taxon.id))
-      @products = @searcher.retrieve_products(params[:store_id])
+      @products = @searcher.retrieve_products(current_store.id)
     end
+
 
   private
   def can_show_product

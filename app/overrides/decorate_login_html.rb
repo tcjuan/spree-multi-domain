@@ -9,3 +9,5 @@ Deface::Override.new(:virtual_path => "spree/shared/_search",
                       :insert_top => ".form",
                       :text => "<%= hidden_field_tag :store_id, current_store.id %>",
                       :disabled => false)
+                      
+ 
