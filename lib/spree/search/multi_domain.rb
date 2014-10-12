@@ -57,7 +57,7 @@ module Spree::Search
     filter_queries  = []
       
       if taxon 
-        filter_queries << taxon.self_and_descendants.map{|t| "taxon_ids:(#{t.id})"}.join(" OR ")
+        filter_queries << taxon.self_and_descendants.map{|t| "taxon_t:(#{t.id})"}.join(" OR ")
       end
       filter_queries << "store_t:#{store_id}" #if @properties[:current_store_id]
       filter_queries << "available_on_t:{* TO NOW}"
