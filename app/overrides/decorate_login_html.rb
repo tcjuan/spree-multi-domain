@@ -1,7 +1,7 @@
 Deface::Override.new(:virtual_path => "spree/shared/_login",
                       :name => "insert_store_id_hidden_tag",
                       :insert_top => "#password-credentials",
-                      :text => "<%= f.hidden_field :store_id, :value => current_store.id %><% end %>",
+                      :text => "<%= f.hidden_field :store_id, :value => current_store.id %>",
                       :disabled => false)
                       
 Deface::Override.new(:virtual_path => "spree/shared/_search",
