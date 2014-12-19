@@ -1,5 +1,5 @@
    <%= f.label :stores, Spree.t(:store)%><br />
-  <% Spree::Taxonomy.all.each do |taxonomy| %>
+  <% Spree::Taxonomy.default_stores(current_store.id).each do |taxonomy| %>
     <%= check_box_tag "qq[taxonomy_ids][]", taxonomy.id , @product.stores.include?(taxonomy.store) ,:style => 'visibility: hidden' %> 
   <% end %>
 
