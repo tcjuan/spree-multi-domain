@@ -1,31 +1,40 @@
 <p>
-  <%= f.label :stores, Spree.t(:stores)%><br />
-  <% Spree::Store.all.each do |store| %>
-    <%= check_box_tag "product[store_ids][]", store.id, @product.stores.include?(store) %> <%= store.name %>
-  <% end %>
+	<%= f.label :stores, Spree.t(:stores)%>
 </p>
-<div id="all_stores">
-<p>
-  <%= f.label :stores, Spree.t(:stores)%><br />
-  <% Spree::Store.all.each do |store| %>
-  <% store_default = store.default%>
-  <% store_default = "true" if current_store.id == store.id %> 
-    <%= check_box_tag "product[store_ids][]", store.id, @product.stores.include?(store)  ,:default =>store_default  , :checked => :true%> <%= store.name %>
-  <% end %>
-</p>
+<% Spree::Store.all.each do |store| %>
+<% store_default = store.default%>
+<% store_default = "true" if current_store.id == store.id %>
+<%= check_box_tag "product_tmp[store_ids][]", store.id, @product.stores.include?(store)  ,:disabled => :disabled %> <%= store.name %>
+<% end %>
+
+<div id="default_stores">
+	<p>
+		<br />
+		<% Spree::Store.all.each do |store| %>
+		<% store_default = store.default%>
+		<% store_default = "true" if current_store.id == store.id %>
+		<%= check_box_tag "product[store_ids][]", store.id, @product.stores.include?(store) ,:checked =>"checked" ,:type => :hidden ,:default =>store_default %>
+		<% end %>
+	</p>
 </div>
-
-
 <p>
-  <%= f.label :stores, Spree.t(:default_stores)%><br />
-    <%= check_box "default_store","1",:onclick =>"checkbox_check();", :checked => :true%> <%=Spree.t(:all_stores) %>
+	<%= check_box "default_store","1",:onclick =>"checkbox_check();"%> <%= Spree.t(:only_current_store) %>
 </p>
 
 <script>
+	function checkbox_check() {
+		if (!$("input[id=default_store_1]").prop("checked")) {
+			$("input", "#default_stores").each(function() {
+				$(this).attr("name", "product_[store_ids][]");
+			});
+		} else {
 
-function checkbox_check(){
-	 alert($("input[default='true']", "#all_stores").text());
-	//alert($(#all_stors));
-}
+			$("input", "#default_stores").each(function() {
+				if ($(this).attr("default") != 'true') {
+					$(this).attr("name", "product_tmp[store_ids][]");
+				}
+			});
+		}
+	}
 
 </script>
