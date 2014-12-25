@@ -18,7 +18,11 @@
 	</p>
 </div>
 <p>
-	<%= check_box "default_store","1",:onclick =>"checkbox_check();"%> <%= Spree.t(:only_current_store) %>
+	<% if @product.stores.count >2 %>
+	<%= check_box "default_store","1",:onclick =>"checkbox_check();" %> <%= Spree.t(:only_current_store) %>
+	<% else%>
+	<%= check_box "default_store","1",:checked => 'checked',:onclick =>"checkbox_check();"  %> <%= Spree.t(:only_current_store) %>
+	<%end%>
 </p>
 
 <script>
